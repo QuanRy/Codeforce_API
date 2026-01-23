@@ -24,14 +24,26 @@ document.getElementById("load-btn").addEventListener("click", async () => {
     const res = await fetch(`${API_BASE}/codeforces/contests?${params}`);
     const data = await res.json();
 
+    // --- статистика ---
     statsEl.innerHTML = `
       <b>Найдено контестов:</b> ${data.stats.total}<br>
       <b>Средняя длительность:</b> ${data.stats.avg_duration} мин
     `;
 
-    resultEl.innerHTML = data.contests.map(c => `
+    if (data.contests.length === 0) {
+      resultEl.innerHTML =
+        "<div class='meta'>Контесты не найдены по заданным фильтрам</div>";
+      return;
+    }
+
+    // --- заголовок + топ-3 ---
+    resultEl.innerHTML = `
+      <div class="top-title">
+        🏆 <b>Топ-3 последних контеста</b>
+      </div>
+    ` + data.contests.map((c, idx) => `
       <div class="contest">
-        <div class="name">${c.name}</div>
+        <div class="name">${idx + 1}️⃣ ${c.name}</div>
         <div class="meta">
           ${c.type} • ${c.phase} • ${c.durationMinutes} мин
         </div>

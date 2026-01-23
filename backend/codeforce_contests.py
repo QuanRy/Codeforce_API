@@ -8,17 +8,26 @@ CODEFORCES_URL = "https://codeforces.com/api/contest.list"
 
 
 def get_contests_df() -> pd.DataFrame:
-    r = requests.get(CODEFORCES_URL)
+    """
+    Загружает список контестов Codeforces и преобразует в DataFrame
+    """
+    r = requests.get(CODEFORCES_URL, timeout=10)
+
     if r.status_code != 200:
-        raise HTTPException(500, "Ошибка Codeforces API")
+        raise HTTPException(status_code=500, detail="Ошибка Codeforces API")
 
     data = r.json()
     if data.get("status") != "OK":
-        raise HTTPException(500, data.get("comment", "Ошибка CF"))
+        raise HTTPException(status_code=500, detail=data.get("comment", "Ошибка CF"))
 
     df = pd.DataFrame(data["result"])
-    df["startTime"] = pd.to_datetime(df["startTimeSeconds"], unit="s", errors="coerce")
+
+    # нормализация данных
+    df["startTime"] = pd.to_datetime(
+        df["startTimeSeconds"], unit="s", errors="coerce"
+    )
     df["durationMinutes"] = df["durationSeconds"] // 60
+
     return df
 
 
@@ -29,24 +38,36 @@ def contests_analytics(
     min_duration: int | None = Query(None, description="Мин. длительность (мин)"),
     max_duration: int | None = Query(None, description="Макс. длительность (мин)")
 ):
+    """
+    Аналитика контестов Codeforces с фильтрами
+    """
     df = get_contests_df()
 
+    # --- фильтрация ---
     if phase:
         df = df[df["phase"] == phase.upper()]
+
     if contest_type:
         df = df[df["type"] == contest_type.upper()]
-    if min_duration:
+
+    if min_duration is not None:
         df = df[df["durationMinutes"] >= min_duration]
-    if max_duration:
+
+    if max_duration is not None:
         df = df[df["durationMinutes"] <= max_duration]
 
+    # --- аналитика ---
     stats = {
         "total": int(len(df)),
-        "avg_duration": round(df["durationMinutes"].mean(), 1) if not df.empty else 0,
-        "by_type": df["type"].value_counts().to_dict()
+        "avg_duration": round(df["durationMinutes"].mean(), 1)
+        if not df.empty else 0
     }
 
-    contests = df.sort_values("startTime", ascending=False).head(15)
+    # --- берём ТОЛЬКО 3 последних контеста ---
+    contests = (
+        df.sort_values("startTime", ascending=False)
+          .head(3)
+    )
 
     return {
         "stats": stats,
