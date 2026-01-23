@@ -7,6 +7,28 @@ const phaseMap = {
   "CODING": "Идет сейчас"
 };
 
+// --- функция отправки аналитики в облако ---
+const sendAnalytics = async (phase, contestType) => {
+  try {
+    const res = await fetch("https://functions.yandexcloud.net/d4ef37tidpkro252ukec", {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({
+        phase: phase,
+        contest_type: contestType
+      })
+    });
+
+    if (!res.ok) throw new Error(`HTTP error! status: ${res.status}`);
+    const data = await res.json();
+    console.log("Облачная аналитика:", data);
+
+  } catch (e) {
+    console.error("Ошибка при вызове облачной функции:", e);
+  }
+};
+
+// --- обработчик клика по кнопке ---
 document.getElementById("load-btn").addEventListener("click", async () => {
   const phase = document.getElementById("phase").value;
   const type = document.getElementById("type").value;
@@ -21,6 +43,9 @@ document.getElementById("load-btn").addEventListener("click", async () => {
   resultEl.innerHTML = "";
   statsEl.innerHTML = "";
 
+  // --- отправка аналитики в облако ---
+  sendAnalytics(phase, type);
+
   const params = new URLSearchParams();
   if (phase) params.append("phase", phase);
   if (type) params.append("contest_type", type);
@@ -31,7 +56,7 @@ document.getElementById("load-btn").addEventListener("click", async () => {
     const res = await fetch(`${API_BASE}/codeforces/contests?${params}`);
     const data = await res.json();
 
-    // --- статистика ---
+    // --- статистика локальная ---
     statsEl.innerHTML = `
       <b>Найдено контестов:</b> ${data.stats.total}<br>
       <b>Средняя длительность:</b> ${data.stats.avg_duration} мин
@@ -43,7 +68,7 @@ document.getElementById("load-btn").addEventListener("click", async () => {
       return;
     }
 
-    // --- топ 3 с русскими фазами и датой ---
+    // --- топ 3 последних контеста с русскими фазами и датой ---
     resultEl.innerHTML = `
       <div class="top-title">
         🏆 <b>Топ-3 последних контеста</b>
