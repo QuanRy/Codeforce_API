@@ -10,5 +10,9 @@ python -m http.server --directory frontend 7000
 # поднять FASTAPI-сервисы
 uvicorn backend.codeforce_ID:app --reload --host 0.0.0.0 --port 8000
 
+# поднять BACKEND 
+uvicorn backend.main:app --reload --host 0.0.0.0 --port 8000
+
+
 # Адрес фронта
 http://localhost:7000/
