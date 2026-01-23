@@ -1,89 +1,181 @@
+/* ===== BASE ===== */
 body {
+  font-family: "Segoe UI", Arial, sans-serif;
   margin: 0;
-  font-family: 'Segoe UI', sans-serif;
   min-height: 100vh;
   background: linear-gradient(
-    120deg,
-    #667eea,
-    #764ba2,
-    #6dd5ed,
-    #2193b0
+    270deg,
+    #5f72ff,
+    #8f6ed5,
+    #42e695
   );
-  background-size: 300% 300%;
-  animation: gradientMove 12s ease infinite;
-
-  display: flex;
-  justify-content: center;
-  align-items: center;
+  background-size: 600% 600%;
+  animation: gradient 14s ease infinite;
+  color: #f4f4f4;
 }
 
-@keyframes gradientMove {
+@keyframes gradient {
   0% { background-position: 0% 50%; }
   50% { background-position: 100% 50%; }
   100% { background-position: 0% 50%; }
 }
 
+/* ===== CONTAINER ===== */
 .container {
-  width: 100%;
-  max-width: 420px;
-  padding: 20px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  padding-top: 40px;
 }
 
-.title {
-  text-align: center;
-  color: #fff;
-  margin-bottom: 20px;
-  text-shadow: 0 4px 10px rgba(0,0,0,0.3);
+/* ===== TITLE ===== */
+.title-with-icons {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+  font-size: 2.1rem;
+  margin-bottom: 28px;
+  text-shadow: 0 4px 12px rgba(0,0,0,0.45);
 }
 
+.title-icon {
+  width: 42px;   /* +20% */
+  height: 42px;
+  filter: drop-shadow(0 4px 8px rgba(0,0,0,0.45));
+}
+
+/* ===== CARD (GLASS) ===== */
 .card {
-  background: rgba(255,255,255,0.15);
-  backdrop-filter: blur(14px);
-  border-radius: 18px;
-  padding: 25px;
-  box-shadow: 0 20px 40px rgba(0,0,0,0.25);
+  width: 400px;
+  padding: 26px 28px;
+  border-radius: 20px;
+
+  background: rgba(255, 255, 255, 0.22);
+  backdrop-filter: blur(16px);
+  -webkit-backdrop-filter: blur(16px);
+
+  box-shadow:
+    0 25px 45px rgba(0,0,0,0.28),
+    inset 0 1px 0 rgba(255,255,255,0.25);
 }
 
+/* ===== FORM TEXT ===== */
 label {
-  color: #fff;
-  opacity: 0.85;
-}
-
-input {
-  width: 100%;
-  padding: 12px;
-  margin-top: 8px;
-  border-radius: 12px;
-  border: none;
-  outline: none;
+  display: block;
+  margin-top: 16px;
   font-size: 1rem;
+  font-weight: 600;
+  opacity: 0.95;
 }
 
-button {
-  margin-top: 15px;
+/* ===== INPUTS & SELECT ===== */
+input,
+select {
   width: 100%;
-  padding: 12px;
+  margin-top: 8px;
+  padding: 12px 14px;
+
   border-radius: 14px;
   border: none;
-  font-weight: bold;
+
+  background: rgba(255,255,255,0.88);
+  color: #2b2b2b;
+
+  font-size: 1rem;
+  font-weight: 500;
+  outline: none;
+
+  box-shadow:
+    inset 0 2px 6px rgba(0,0,0,0.15),
+    0 2px 6px rgba(0,0,0,0.15);
+}
+
+/* убираем системный стиль select */
+select {
+  appearance: none;
+  -webkit-appearance: none;
+  -moz-appearance: none;
+  background-image:
+    linear-gradient(45deg, transparent 50%, #555 50%),
+    linear-gradient(135deg, #555 50%, transparent 50%);
+  background-position:
+    calc(100% - 20px) 18px,
+    calc(100% - 15px) 18px;
+  background-size: 6px 6px;
+  background-repeat: no-repeat;
   cursor: pointer;
-  background: linear-gradient(135deg, #ff758c, #ff7eb3);
-  color: #fff;
-  transition: transform 0.2s ease;
+}
+
+/* ===== FOCUS ===== */
+input:focus,
+select:focus {
+  background: #ffffff;
+  box-shadow:
+    0 0 0 3px rgba(255,255,255,0.5),
+    0 8px 18px rgba(0,0,0,0.25);
+}
+
+/* ===== ROW ===== */
+.row {
+  display: flex;
+  gap: 12px;
+}
+
+/* ===== BUTTON ===== */
+button {
+  width: 100%;
+  margin-top: 22px;
+  padding: 14px;
+
+  border: none;
+  border-radius: 16px;
+
+  background: linear-gradient(135deg, #ffffff, #e6e6ff);
+  color: #333;
+
+  font-weight: 800;
+  font-size: 1.05rem;
+  cursor: pointer;
+
+  box-shadow: 0 12px 25px rgba(0,0,0,0.3);
 }
 
 button:hover {
-  transform: scale(1.03);
+  transform: translateY(-2px);
+  box-shadow: 0 16px 30px rgba(0,0,0,0.4);
 }
 
+/* ===== ERROR & STATS ===== */
 .error {
-  margin-top: 10px;
-  color: #ffcccc;
+  margin-top: 14px;
   text-align: center;
+  color: #ffdddd;
+  font-size: 0.95rem;
+  font-weight: 600;
 }
 
+.stats {
+  margin-top: 18px;
+  font-size: 0.95rem;
+  opacity: 0.95;
+}
+
+/* ===== RESULTS ===== */
 .result {
-  margin-top: 15px;
-  color: #fff;
-  line-height: 1.6;
+  margin-top: 14px;
+}
+
+.contest {
+  padding: 12px 0;
+  border-bottom: 1px solid rgba(255,255,255,0.35);
+}
+
+.name {
+  font-weight: 700;
+  font-size: 1rem;
+}
+
+.meta {
+  font-size: 0.9rem;
+  opacity: 0.8;
 }

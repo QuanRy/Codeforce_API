@@ -2,7 +2,7 @@
 <html lang="ru">
 <head>
   <meta charset="UTF-8">
-  <title>Codeforces Finder</title>
+  <title>Codeforces Contest Finder</title>
   <link rel="icon" type="image/png" href="img/pc_icon.png">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <link rel="stylesheet" href="style.css">
@@ -10,17 +10,41 @@
 
 <body>
   <div class="container">
-    <h1 class="title">Codeforces Contest Finder</h1>
+
+    <h1 class="title-with-icons">
+      <img src="img/pc_icon.png" class="title-icon">
+      Codeforces Contest Analytics
+      <img src="img/pc_icon.png" class="title-icon">
+    </h1>
 
     <div class="card">
-      <label>Введите ID контеста</label>
-      <input type="number" id="contest-id-input" placeholder="Например: 1950">
+      <label>Фаза контеста</label>
+      <select id="phase">
+        <option value="">Любая</option>
+        <option value="FINISHED">FINISHED</option>
+        <option value="BEFORE">BEFORE</option>
+      </select>
 
-      <button id="find-contest-btn">Найти</button>
+      <label>Тип контеста</label>
+      <select id="type">
+        <option value="">Любой</option>
+        <option value="CF">CF</option>
+        <option value="ICPC">ICPC</option>
+      </select>
+
+      <label>Длительность (мин)</label>
+      <div class="row">
+        <input type="number" id="min-duration" placeholder="от">
+        <input type="number" id="max-duration" placeholder="до">
+      </div>
+
+      <button id="load-btn">Показать контесты</button>
 
       <div id="cf-error" class="error"></div>
-      <div id="cf-result"></div>
+      <div id="stats" class="stats"></div>
+      <div id="cf-result" class="result"></div>
     </div>
+
   </div>
 
   <script src="script.js"></script>
