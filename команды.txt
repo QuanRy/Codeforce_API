@@ -4,6 +4,9 @@ venv\Scripts\activate
 
 pip install -r requirements.txt
 
+# поднять GUI
+python GUI/cf_gui.py
+
 # поднять FRONTEND (внутри папки frontend)
 python -m http.server --directory frontend 7000 
 
