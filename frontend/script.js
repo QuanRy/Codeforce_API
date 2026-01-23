@@ -1,5 +1,12 @@
 const API_BASE = "http://127.0.0.1:8000";
 
+// Карта фаз на русский
+const phaseMap = {
+  "FINISHED": "Завершенный",
+  "BEFORE": "Будущий",
+  "CODING": "Идет сейчас"
+};
+
 document.getElementById("load-btn").addEventListener("click", async () => {
   const phase = document.getElementById("phase").value;
   const type = document.getElementById("type").value;
@@ -36,21 +43,30 @@ document.getElementById("load-btn").addEventListener("click", async () => {
       return;
     }
 
-    // --- заголовок + топ-3 ---
+    // --- топ 3 с русскими фазами и датой ---
     resultEl.innerHTML = `
       <div class="top-title">
         🏆 <b>Топ-3 последних контеста</b>
       </div>
-    ` + data.contests.map((c, idx) => `
-      <div class="contest">
-        <div class="name">${idx + 1}️⃣ ${c.name}</div>
-        <div class="meta">
-          ${c.type} • ${c.phase} • ${c.durationMinutes} мин
+    ` + data.contests.map((c, idx) => {
+      const date = new Date(c.startTime);
+      const day = String(date.getDate()).padStart(2, '0');
+      const month = String(date.getMonth() + 1).padStart(2, '0');
+      const year = date.getFullYear();
+      const dateStr = `${day}.${month}.${year}`;
+
+      return `
+        <div class="contest">
+          <div class="name">${idx + 1}️⃣ ${c.name}</div>
+          <div class="meta">
+            ${c.type} • ${phaseMap[c.phase] || c.phase} • ${dateStr} • ${c.durationMinutes} мин
+          </div>
         </div>
-      </div>
-    `).join("");
+      `;
+    }).join("");
 
   } catch (e) {
     errorEl.textContent = "Ошибка при загрузке данных";
+    console.error(e);
   }
 });
